@@ -1,0 +1,26 @@
+{
+  "name": "postitnotes",
+  "version": "1.0.0",
+  "description": "a cli for Chinese-English translation  ",
+  "main": "index.js",
+  "dependencies": {
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AviorAlong/postItNotes.git"
+  },
+  "keywords": [
+    "notes"
+  ],
+  "author": "AviroAlong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AviorAlong/postItNotes/issues"
+  },
+  "homepage": "https://github.com/AviorAlong/postItNotes#readme"
+}
