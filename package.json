@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/AviorAlong/postItNotes/issues"
   },
+  "bin": {
+    "bdnote": "index.js"
+  },
   "homepage": "https://github.com/AviorAlong/postItNotes#readme"
 }
