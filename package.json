@@ -4,7 +4,8 @@
   "description": "a cli for Chinese-English translation  ",
   "main": "index.js",
   "dependencies": {
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "yargs": "^13.2.2"
   },
   "devDependencies": {},
   "scripts": {

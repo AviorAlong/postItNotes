@@ -15,7 +15,7 @@ const apiForm = {
     salt: 123, // 随机数
     sign: '' // 签名
 }
-
+// 百度参数解析
 class BdApiForm {
     constructor(config) {
         this.config = config
@@ -58,10 +58,10 @@ class BdApiForm {
 
     }
 }
-
+// 请求封装
 class PostItNotes {
     constructor() {}
-
+    // 发送http请求
     getTransRet(url) {
         return new Promise((resolve, reject) => {
             request({
@@ -78,7 +78,7 @@ class PostItNotes {
 
 
 }
-
+// 项目执行入口
 async function main() {
     const src = process.argv[2];
     if (!src) {
@@ -86,7 +86,8 @@ async function main() {
         return process.exit(0)
     }
     if (src == '--help') {
-        console.log('英语菜鸟你来啦')
+        console.log('英语菜鸟你来啦,欢迎使用笨蛋翻译 \n')
+        console.log('Example: bdnote 笨蛋')
         return process.exit(0)
     }
 
