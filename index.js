@@ -1,107 +1,82 @@
 #!/usr/bin/env node
 
-const request = require('request');
-const crypto = require('crypto');
-const querystring = require('querystring');
-const md5 = crypto.createHash('md5');
-const URL = 'http://api.fanyi.baidu.com/api/trans/vip/translate'
-const key = 'PoLccfhuLquGTBsYMC_B'
-const appid = '20190315000277486'
-const apiForm = {
-    q: '', // 请求查询的字符串
-    from: 'zh', // 翻译源语言 默认‘zh’
-    to: 'en', // 翻译语言 默认‘en’
-    appid: appid, // appid
-    salt: 123, // 随机数
-    sign: '' // 签名
+const yargs = require('yargs')
+const Account = require('./cli/account')
+const Translator = require('./cli/trans')
+const print = require('./cli/print')
+const baseConf = require('./config/base.json')
+
+function showTip() {
+    return yargs
+        .usage('Usage: bdnote [options]')
+        .option('word', {
+            array: true,
+            alias: 'w',
+            describe: '需要翻译的单词,每次最多查询10个（英/汉）',
+            type: 'array'
+        })
+        .option('appid', {
+            alias: 'id',
+            describe: '百度开发者帐号的appid',
+            type: 'string'
+        })
+        .option('key', {
+            alias: 'k',
+            describe: '百度开发者帐号的密钥',
+            type: 'string'
+        })
+        .option('clean', {
+            describe: '清除本地缓存的词典',
+        })
+        .option('en', {
+            default: false,
+            describe: '默认汉译英，en=true为英译汉',
+            type: 'string'
+        })
+        .argv
 }
-// 百度参数解析
-class BdApiForm {
-    constructor(config) {
-        this.config = config
-    }
-    // 检查是否符合百度翻译api的请求参数
-    isBaiduApiForm(arr) {
-        let keys = arr.keys();
-        for (key in keys) {
-            if (!apiForm[key]) {
-                return false
-            }
-        }
-        return true
-    }
-
-    // 解析命令
-    toResolveCli(str) {
-        if (!str) {
-            throw new Error('input error')
-        }
-        let salt = Math.ceil(Math.random() * 10000000)
-        let b = md5.update(`${appid}${str}${salt}${key}`).digest('hex');
-
-        return querystring.stringify(
-            Object.assign(apiForm, {
-                q: str,
-                salt: salt,
-                sign: b
-            })
-        )
-    }
-
-    // 解析请求结果
-    toResolveResult(ret) {
-        return JSON.parse(ret)['trans_result']
-    }
-
-    // 语音解读
-    toReadResult() {
-
-    }
-}
-// 请求封装
-class PostItNotes {
-    constructor() {}
-    // 发送http请求
-    getTransRet(url) {
-        return new Promise((resolve, reject) => {
-            request({
-                url: url,
-
-            }, (err, res, body) => {
-                if (err) {
-                    return reject(err)
-                }
-                return resolve(body)
-            })
-        });
-    }
 
 
-}
-// 项目执行入口
-async function main() {
-    const src = process.argv[2];
-    if (!src) {
-        console.log('请输入正确的参数')
-        return process.exit(0)
-    }
-    if (src == '--help') {
-        console.log('英语菜鸟你来啦,欢迎使用笨蛋翻译 \n')
-        console.log('Example: bdnote 笨蛋')
-        return process.exit(0)
-    }
+(async function main() {
 
-    let bd = new BdApiForm(apiForm)
-    let note = new PostItNotes()
-    let url = `${URL}?${bd.toResolveCli(src)}`
     try {
-        let ret = await note.getTransRet(url)
-        let result = bd.toResolveResult(ret)
-        console.log(result)
+        let argv = showTip()
+        // 查看帮助文档
+        if (argv.help) {
+            return process.exit(0)
+        }
+        // 清除本地缓存
+        if (argv.clean) {
+            return cleanCache()
+        }
+        // 使用个人百度帐号查询
+        if (argv.appid && argv.key) {
+            let account = new Account(argv)
+            return account.toCheckAuth()
+        }
+        if (argv.word.length > baseConf.wordLimit) {
+            throw new Error(`每次最多查询${baseConf.wordLimit}个单词`)
+        }
+        let trans = new Translator(argv)
+        // 执行查询逻辑
+        if (argv.word && Array.isArray(argv.word)) {
+
+            let transResult = ''
+            if (argv.en) {
+                // 英译汉
+                transResult = await trans.toTransZh(argv.word)
+            } else {
+                // 汉译英
+                transResult = await trans.toTransEn(argv.word)
+            }
+            print.printStr(transResult)
+        } else {
+            console.log('请输入正确的参数')
+        }
         process.exit(0)
+
     } catch (err) {
+        console.log(err)
         process.exit(1)
     }
-}
-
-main()
+})()

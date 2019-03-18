@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+const Account = require('../cli/account')
 const yargs = require('yargs');
+
 
 function showTip() {
     return yargs
@@ -17,7 +19,7 @@ function showTip() {
             type: 'string'
         })
         .option('key', {
-            alias: 'id',
+            alias: 'k',
             describe: '百度开发者帐号的密钥',
             type: 'string'
         })
@@ -31,17 +33,10 @@ function showTip() {
         })
         .argv
 }
-
-async function main() {
-    let argv = showTip()
-    if (argv.help) {
-        return process.exit(0)
-    }
-    try {
-        process.exit(0)
-    } catch (err) {
-        process.exit(1)
-    }
-}
-
-main()
+process.on('uncaughtException', (err) => {
+    console.log(JSON.stringify(err))
+    process.exit(1)
+})
+let argv = showTip()
+let account = new Account(argv)
+account.toCheckAuth()

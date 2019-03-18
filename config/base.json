@@ -1,5 +1,13 @@
 {
-    "url": "",
+    "url": "http://192.168.0.124:19940",
     "wordLimit": 10,
-    "languageSupport": ["zh", "en"]
+    "languageSupport": ["zh", "en"],
+    "baiduApiForm": {
+        "q": "",
+        "from": "zh",
+        "to": "en",
+        "appid": "",
+        "salt": 123,
+        "sign": ""
+    }
 }
