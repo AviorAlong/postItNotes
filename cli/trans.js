@@ -51,7 +51,10 @@ class Translator {
 
     // 解析请求结果
     toResolveResult(ret) {
-        return JSON.parse(ret)['trans_result'][0]
+
+        let tmp = JSON.parse(ret)
+        let realRet = tmp && tmp['trans_result']
+        return realRet && realRet[0] ? realRet[0] :
     }
 
     // url处理，调起翻译
@@ -66,12 +69,17 @@ class Translator {
                 for (let word in words) {
                     let uri = `${url}?${this.toResolveCli(words[word])}`
                     let transRet = await this.getTransRet(uri)
-                    results.push(this.toResolveResult(transRet))
+                    if (transRet) {
+                        results.push(this.toResolveResult(transRet))
+                    }
+
                 }
             } else {
                 let uri = `${url}?${querystring.stringify({words: words})}`
                 let transRet = await this.getTransRet(uri)
-                results.push(this.toResolveResult(transRet))
+                if (transRet) {
+                    results.push(this.toResolveResult(transRet))
+                }
             }
             return results
         } catch (err) {
