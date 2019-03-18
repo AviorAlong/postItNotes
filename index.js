@@ -56,7 +56,8 @@ function showTip() {
             return account.toCheckAuth()
         }
         if (argv.word.length > baseConf.wordLimit) {
-            throw new Error(`每次最多查询${baseConf.wordLimit}个单词`)
+            console.log(`每次最多查询${baseConf.wordLimit}个单词`)
+            throw new Error('词汇量大')
         }
         let trans = new Translator(argv)
         // 执行查询逻辑
@@ -77,7 +78,7 @@ function showTip() {
         process.exit(0)
 
     } catch (err) {
-        console.log(err)
+        console.log('猿猿，要不您再试试')
         process.exit(1)
     }
 })()

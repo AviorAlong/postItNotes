@@ -24,6 +24,10 @@ class Translator {
                 if (err || res.statusCode !== 200) {
                     return reject(err || res.statusCode)
                 }
+                if (body.error_code) {
+                    return reject(body.error_msg || '猿猿，翻译官好像不懂你在说什么')
+                }
+
                 return resolve(body)
             })
         });
@@ -54,7 +58,10 @@ class Translator {
 
         let tmp = JSON.parse(ret)
         let realRet = tmp && tmp['trans_result']
-        return realRet && realRet[0] ? realRet[0] :
+        if (!realRet || !realRet[0]) {
+            throw new Error('')
+        }
+        return realRet[0]
     }
 
     // url处理，调起翻译
@@ -83,6 +90,7 @@ class Translator {
             }
             return results
         } catch (err) {
+            console.log(err)
             throw new Error(err)
         }
 
