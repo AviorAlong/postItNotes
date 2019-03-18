@@ -47,7 +47,8 @@ function showTip() {
         }
         // 清除本地缓存
         if (argv.clean) {
-            return cleanCache()
+            console.log('本地缓存已清除')
+            return
         }
         // 使用个人百度帐号查询
         if (argv.appid && argv.key) {
