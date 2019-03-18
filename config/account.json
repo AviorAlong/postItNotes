@@ -1,5 +1,5 @@
 {
     "url": "http://api.fanyi.baidu.com/api/trans/vip/translate",
-    "appid": "1",
-    "key": "2"
+    "appid": "your id",
+    "key": "your key"
 }
