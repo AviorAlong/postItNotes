@@ -41,7 +41,7 @@ class Account {
 
     toSaveConfig(content) {
         try {
-            let src = path.resolve('config/account.json')
+            let src = path.join(__dirname, '../config/account.json')
             fs.writeFileSync(src, Buffer.from(content))
         } catch (err) {
             throw new Error(err)
