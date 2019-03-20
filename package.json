@@ -1,6 +1,6 @@
 {
   "name": "bdnote",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a cli for Chinese-English translation  ",
   "main": "index.js",
   "dependencies": {
